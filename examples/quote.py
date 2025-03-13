@@ -3,7 +3,6 @@ import httpx
 
 mcp = FastMCP("Quotes", port=8000)
 
-
 @mcp.tool()
 def get_quote() -> str:
     """Get an inspirational quote from the Zen Quotes API

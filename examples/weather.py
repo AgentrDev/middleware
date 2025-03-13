@@ -6,7 +6,7 @@ mcp = FastMCP("Weather", port=8002)
 
 @mcp.tool()
 def set_openweather_api_key(api_key: str) -> str:
-    """Set the API key for the weather service
+    """Set the API key for the weather service  
     
     Args:
         api_key: The API key to set

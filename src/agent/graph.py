@@ -20,14 +20,14 @@ async def load_tools():
             #     "url": "http://localhost:8001/sse",
             #     "transport": "sse",
             # },
-            # "weather": {
-            #     "url": "http://localhost:8002/sse",
-            #     "transport": "sse",
-            # },
-            "github": {
-                "url": "http://localhost:8003/sse",
+            "weather": {
+                "url": "http://localhost:8002/sse",
                 "transport": "sse",
             },
+            # "github": {
+            #     "url": "http://localhost:8003/sse",
+            #     "transport": "sse",
+            # },
         }
     ) as client:
         tools = client.get_tools()

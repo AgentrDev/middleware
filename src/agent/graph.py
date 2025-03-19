@@ -5,29 +5,17 @@ from langchain_mcp_adapters.client import MultiServerMCPClient
 import asyncio
 from contextlib import asynccontextmanager
 
-llm = ChatAnthropic(model="claude-3-7-sonnet-latest")
+llm = ChatAnthropic(model="claude-3-5-sonnet-latest")
 
 
 @asynccontextmanager
 async def load_tools():
     async with MultiServerMCPClient(
         {
-            # "quotes": {
-            #     "url": "http://localhost:8000/sse",
-            #     "transport": "sse",
-            # },
-            # "search": {
-            #     "url": "http://localhost:8001/sse",
-            #     "transport": "sse",
-            # },
-            "weather": {
-                "url": "http://localhost:8002/sse",
+            "agentr": {
+                "url": "http://localhost:8000/sse",
                 "transport": "sse",
             },
-            # "github": {
-            #     "url": "http://localhost:8003/sse",
-            #     "transport": "sse",
-            # },
         }
     ) as client:
         tools = client.get_tools()

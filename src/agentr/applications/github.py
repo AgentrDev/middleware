@@ -14,6 +14,7 @@ class GithubApp(Application):
             "Accept": "application/vnd.github.v3+json"
         }
 
+
     def star_repository(self, repo_full_name: str) -> str:
         """Star a GitHub repository
         

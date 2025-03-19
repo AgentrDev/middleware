@@ -28,7 +28,7 @@ class Application(ABC):
     def _put(self, url, data):
         headers = self._get_headers()
         response = httpx.put(url, headers=headers, data=data)
-        return response.json()
+        return response
 
     def _delete(self, url):
         headers = self._get_headers()

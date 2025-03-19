@@ -26,7 +26,8 @@ class NangoStore(Store):
         url = "https://api.nango.dev/integrations"
         response = httpx.get(url, headers={"Authorization": f"Bearer {self.nango_secret_key}"})
         if response.status_code == 200:
-            return response.json()["data"]
+            integrations = response.json()["data"]
+            return [ {**i, "integration_type": "nango"} for i in integrations]
         logger.error(f"Failed to list integrations: {response.text}")
         return []
     
@@ -35,3 +36,20 @@ class NangoStore(Store):
         response = httpx.get(url, headers={"Authorization": f"Bearer {self.nango_secret_key}"})
         data = response.json()
         return data["credentials"]
+    
+class AgentRStore(Store):
+    def __init__(self, user_id, organization_id = None) -> None:
+        super().__init__(user_id, organization_id)
+        self.base_url = "https://api.agentr.info/v1"
+        self.api_key = "7261c2fd-91aa-4ba1-9657-a34b2a0e4272"
+        
+    def list_integrations(self):
+        url = f"{self.base_url}/integrations"
+        response = httpx.get(url, headers={"Authorization": f"Bearer {self.api_key}"})
+        integrations = response.json()["data"]
+        return [ {**i, "integration_type": "nango"} for i in integrations]
+        
+    def retrieve_credential(self, integration_id, connection_id):
+        url = f"{self.base_url}/credentials/{connection_id}"
+        response = httpx.get(url, headers={"Authorization": f"Bearer {self.api_key}"})
+        return response.json()["data"]

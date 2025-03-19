@@ -1,7 +1,6 @@
 from agentr.application import Application
 from agentr.integration import Integration
 from agentr.store import Store
-from loguru import logger
 
 class ZenQuoteApp(Application):
     def __init__(self, user_id, integration: Integration = None, store: Store = None) -> None:

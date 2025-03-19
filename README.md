@@ -10,3 +10,16 @@
 
 # Store - Stores integrations and credentials securely
 # Server - The MCP Server
+
+
+
+
+
+Frontend < - > Backend < - > Db
+
+
+Backend < - > MCP Server (per user)
+
+
+
+Prepare for Demo

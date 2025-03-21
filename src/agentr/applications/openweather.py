@@ -2,6 +2,7 @@ from agentr.application import Application
 from agentr.integration import Integration
 from agentr.store import Store
 import httpx
+
 class OpenWeatherApp(Application):
     def __init__(self, user_id, integration: Integration, store: Store) -> None:
         super().__init__(name="openweather", user_id=user_id, integration=integration, store=store)
@@ -21,7 +22,8 @@ class OpenWeatherApp(Application):
             "q": city,
             "units": "metric"
         }
-        data = self._get(url, params)
+        response = self._get(url, params)
+        data = response.json()
         weather = data["weather"][0]["description"]
         temp = data["main"]["temp"]
         humidity = data["main"]["humidity"]

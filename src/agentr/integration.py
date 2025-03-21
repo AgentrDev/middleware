@@ -1,6 +1,8 @@
 from abc import abstractmethod, ABC
 import httpx
+import os
 
+from loguru import logger
 class Integration(ABC):
     def __init__(self, user_id, integration_id):
         self.integration_id = integration_id
@@ -18,7 +20,7 @@ class NangoIntegration(Integration):
     def __init__(self, user_id, integration_id):
         self.integration_id = integration_id
         self.user_id = user_id
-        self.nango_secret_key = "7261c2fd-91aa-4ba1-9657-a34b2a0e4272"
+        self.nango_secret_key = os.getenv("NANGO_SECRET_KEY")
 
     def _create_session_token(self):
         url = "https://api.nango.dev/connect/sessions"
@@ -48,17 +50,33 @@ class NangoIntegration(Integration):
     
 class AgentRIntegration(Integration):
     def __init__(self, user_id, integration_id):
+        self.base_url = "https://agentr.info/api"
         self.integration_id = integration_id
         self.user_id = user_id
-        self.api_key = "7261c2fd-91aa-4ba1-9657-a34b2a0e4272"
-        
+        self.api_key = "41c23144-c779-4458-8edb-3607bc3a92d4"
+
+    def _create_session_token(self):
+        url = f"{self.base_url}/integrations/{self.integration_id}/fetch_nango_session/"
+        body = {
+            "owner": self.user_id
+        }
+        response = httpx.post(url, headers={"Authorization": f"Bearer {self.api_key}"}, json=body)
+        response.raise_for_status()
+        data = response.json()
+        return data["data"]["token"]
+
     def get_authorize_url(self):
-        return f"https://api.agentr.ai/oauth/connect/{self.integration_id}"
+        session_token = self._create_session_token()
+        return f"https://api.nango.dev/oauth/connect/{self.integration_id}?connect_session_token={session_token}"
     
     def get_connection_by_owner(self, user_id):
-        url = f"https://api.agentr.dev/v1/credentials/{self.integration_id}?endUserId={user_id}"
+        url = f"{self.base_url}/integrations/{self.integration_id}/connections_from_owner/?owner={user_id}"
         response = httpx.get(url, headers={"Authorization": f"Bearer {self.api_key}"})
-        if response.status_code == 200:
-            return response.json()["data"]
+        response.raise_for_status()
+        data = response.json()
+        logger.info(data)
+        connections = data.get("connection_ids", [])
+        if len(connections) > 0:
+            return connections[0]
         return None
 

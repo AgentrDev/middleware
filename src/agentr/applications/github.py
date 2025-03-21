@@ -2,6 +2,7 @@ from agentr.application import Application
 from agentr.integration import Integration
 from agentr.store import Store
 from loguru import logger
+import httpx
 
 class GithubApp(Application):
     def __init__(self, user_id, integration: Integration, store: Store) -> None:
@@ -9,12 +10,13 @@ class GithubApp(Application):
 
     def _get_headers(self):
         credentials = self.store.retrieve_credential(self.integration.integration_id, self.connection_id)
+        if "headers" in credentials:
+            return credentials["headers"]
         return {
             "Authorization": f"Bearer {credentials['access_token']}",
             "Accept": "application/vnd.github.v3+json"
         }
-
-
+    
     def star_repository(self, repo_full_name: str) -> str:
         """Star a GitHub repository
         

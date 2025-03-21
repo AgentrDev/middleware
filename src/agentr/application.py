@@ -15,15 +15,15 @@ class Application(ABC):
     def _get_headers(self):
         return {}
     
-    def _get(self, url):
+    def _get(self, url, params=None):
         headers = self._get_headers()
-        response = httpx.get(url, headers=headers)
-        return response.json()
+        response = httpx.get(url, headers=headers, params=params)
+        return response
     
     def _post(self, url, data):
         headers = self._get_headers()
         response = httpx.post(url, headers=headers, data=data)
-        return response.json()
+        return response
 
     def _put(self, url, data):
         headers = self._get_headers()
@@ -33,7 +33,7 @@ class Application(ABC):
     def _delete(self, url):
         headers = self._get_headers()
         response = httpx.delete(url, headers=headers)
-        return response.json()
+        return response
 
     def set_connection_id(self, connection_id):
         self.connection_id = connection_id
